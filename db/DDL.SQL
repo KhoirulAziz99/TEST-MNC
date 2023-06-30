@@ -20,18 +20,13 @@ create table if not exists merchant (
     active_status bool default true
 );
 
-create table if not exists history_log (
-    id serial not null primary key,
-    customer_id integer not null,
-    created_at timestamp,
-    foreign key(customer_id) references customer(id)
-);
 
 create table if not exists history_trx (
     id serial not null primary key,
     customer_email integer not null,
     merchant_name integer not null,
     created_at timestamp,
+    amount integer not null,
     foreign key(customer_email) references customer(email),
     foreign key(merchant_name) references merchant(name)
 );

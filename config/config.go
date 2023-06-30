@@ -9,8 +9,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
+//method untuk configurasi database dan koneksi database
+
 func InitDb() (*sql.DB, error) {
-	host := utility.GetEnv("DB_HOST")
+	host := utility.GetEnv("DB_HOST") 
 	port := utility.GetEnv("DB_PORT")
 	user := utility.GetEnv("DB_USER")
 	password := utility.GetEnv("DB_PASSWORD")
@@ -31,6 +33,7 @@ func InitDb() (*sql.DB, error) {
 	return db, nil
 }
 
+//untuk memutus database
 func DbClose(db *sql.DB) {
 	err := db.Close()
 	if err != nil {

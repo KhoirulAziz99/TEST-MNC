@@ -5,6 +5,8 @@ import (
 	"github.com/KhoirulAziz99/mnc/internal/repository"
 )
 
+//saya jelaskan secara garia besar, package ini adalah services, biasanya untuk bisnis logic, berhubung tidak adabisnis logic jadi tiap methodnya hanya mengembalikan repository
+
 type TransactionServices interface {
 	Make(transaction models.Transaction) error
 	History(email string) ([]models.TransactionHistory, error)

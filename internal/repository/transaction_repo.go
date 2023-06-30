@@ -9,19 +9,21 @@ import (
 	"github.com/KhoirulAziz99/mnc/internal/models"
 )
 
+// Membuat interface yang berisi method2 sebagai kontrak
 type TransactionRepository interface {
 	Create(transaction models.Transaction) error
 	History(email string) ([]models.TransactionHistory, error)
 }
-
+//implementasi dari interface di atas
 type transactionRepository struct {
 	db *sql.DB
 }
-
+//Berfungsi sebagai konstruktor (Ini gunanya agar method-method di pakcage ini bisa dipanggil)
 func NewTransactionRepository(db *sql.DB) *transactionRepository {
 	return &transactionRepository{db: db}
 }
 
+//method create untuk membuat transaksi
 func (t transactionRepository) Create(transaction models.Transaction) error {
 	trx, err := t.db.Begin() //Mulai transaksi
 	if err != nil {
@@ -50,7 +52,7 @@ func (t transactionRepository) Create(transaction models.Transaction) error {
 	if err != nil {
 		_ = trx.Rollback() // Membatalkan transaksi
 		if err == sql.ErrNoRows {
-			log.Fatalf("Merchent not found")
+			log.Fatalf("Merchant not found")
 			return err
 		}
 		return err
@@ -108,6 +110,7 @@ func (t transactionRepository) Create(transaction models.Transaction) error {
 
 }
 
+//method history yang nantinya untuk menampilkan history transaksi
 func(t transactionRepository) History(email string) ([]models.TransactionHistory, error) {
 	query := `SELECT 
 	c.id, 

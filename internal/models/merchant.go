@@ -1,5 +1,8 @@
 package models
 
+//Struct digunakan untuk cetakan atau blueprint, kalau di bahasa lain mirip class
+
+
 import "time"
 
 type Merchant struct {

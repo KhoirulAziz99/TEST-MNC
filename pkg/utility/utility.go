@@ -8,6 +8,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+//untuk keamanan data sensitive
+
 func GetEnv(key string) string {
 	err := godotenv.Load("../.env")
 

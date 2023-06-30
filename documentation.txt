@@ -1,0 +1,296 @@
+Dokumentasi ini saya buat sebagai petunjuk untuk menjalankan aplikasi berbasis api yang saya buat
+
+## 1 ##
+==================================>> Melakukan Register <<============================================
+Melakukan register dengan cara membuat endpoint 'http://localhost:8080/customers/register'
+Input data dengan input data dengan format berikut di postman :
+
+{
+    "name":"Angga",
+    "email":"angga@mail.com",
+    "password":"angga1234",
+    "balance":1000000
+}
+
+Setelah itu akan ada keterangan kalau data berhasil diinput(jika format benar) seperti di bawah
+
+{
+    "message": "Succsessfully added data"
+}
+
+Data yang sudah diinputkan bisa dicheck di database dengan cara membuat request baru dengan endpoint
+'http://localhost:8080/customers/get-all' dengan methode GET,
+ namun akan muncul keterangan 'Unautorization' :
+
+ {
+    "error": "Unauthorization"
+}
+
+Hal ini dkarenakan customer kita baru melakukan register, untuk mengatasinya kita harus melakukan langkah kedu yaitu Login
+
+
+## 2 ##
+==================================>> Melakukan Login <<============================================
+Cara login yaitu dengan membuat request baru dengan endpoint 'http://localhost:8080/customers/login'
+method-nya adalah POST. ada beberapa kemungkina, jika email atau password yang kita masukkan salah :
+
+(password salah)
+{
+    "email":"angga@mail.com",
+    "password":"wrong-password" 
+}
+
+akan muncul respond :
+
+{
+    "error": "Invalid password"
+}
+
+(email salah)
+{
+    "email":"wrong@mail.wrong",
+    "password":"angga1234"
+}
+
+akan muncul respond :
+
+{
+    "error :": "Invalid email"
+}
+
+Jika email dan password yang kita masukkan benar maka akan muncul token untuk authorization
+
+(email dan password benar)
+{
+    "email":"angga@mail.com",
+    "password":"angga1234"
+}
+
+respond :
+{
+    "message": "Your token will expire in 24 hours",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuZ2dhQG1haWwuY29tIiwiZXhwIjoxNjg4MjIyNzE4fQ.
+    3Gsq0esntDBDbVWNl76zpF4TqgLPPk-cyvqqe38bQiE"
+}
+
+setelah kita kita bisa menggunakan fitur get-all dengan endpoint 'http://localhost:8080/customers/get-all'
+lalu akan muncul seluruh data di tabel :
+
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Arul",
+            "email": "arul@mail.com",
+            "password": "arul1234",
+            "balance": 200000,
+            "created_at": "2023-06-29T22:27:36.440189Z",
+            "updated_at": "2023-06-29T22:27:36.440189Z",
+            "is_deleted": false
+        },
+        {
+            "id": 2,
+            "name": "Arjuna",
+            "email": "arjuna@mail.com",
+            "password": "arjuna1234",
+            "balance": 0,
+            "created_at": "2023-06-29T22:30:09.000998Z",
+            "updated_at": "2023-06-29T22:30:09.000998Z",
+            "is_deleted": false
+        },
+        {
+            "id": 3,
+            "name": "Andika",
+            "email": "andika@mail.com",
+            "password": "andika1234",
+            "balance": 100000,
+            "created_at": "2023-06-29T22:33:47.738115Z",
+            "updated_at": "2023-06-29T22:33:47.738115Z",
+            "is_deleted": false
+        },
+        {
+            "id": 4,
+            "name": "Ardan",
+            "email": "ardan@mail.com",
+            "password": "ardan1234",
+            "balance": 900000,
+            "created_at": "2023-06-30T14:31:16.833852Z",
+            "updated_at": "2023-06-30T14:31:16.833852Z",
+            "is_deleted": false
+        },
+        {
+            "id": 5,
+            "name": "Agus",
+            "email": "agus@mail.com",
+            "password": "agus1234",
+            "balance": 500000,
+            "created_at": "2023-06-30T20:59:03.60645Z",
+            "updated_at": "2023-06-30T20:59:03.60645Z",
+            "is_deleted": false
+        },
+        {
+            "id": 6,
+            "name": "Agung",
+            "email": "agung@mail.com",
+            "password": "agung1234",
+            "balance": 500000,
+            "created_at": "2023-06-30T20:59:03.60645Z",
+            "updated_at": "2023-06-30T20:59:03.60645Z",
+            "is_deleted": false
+        },
+        {
+            "id": 7,
+            "name": "Agam",
+            "email": "agam@mail.com",
+            "password": "agam1234",
+            "balance": 500000,
+            "created_at": "2023-06-30T20:59:03.60645Z",
+            "updated_at": "2023-06-30T20:59:03.60645Z",
+            "is_deleted": false
+        },
+        {
+            "id": 8,
+            "name": "Angga", (data baru yang kita masukkan tadi)
+            "email": "angga@mail.com",
+            "password": "angga1234",
+            "balance": 1000000,
+            "created_at": "2023-06-30T21:30:31.504531Z",
+            "updated_at": "2023-06-30T21:30:31.504531Z",
+            "is_deleted": false
+        }
+    ]
+}
+
+Lanjut ke fitur selanjutnya yaitu transaksi
+
+
+## 3 ##
+==================================>> Melakukan Transaksi <<============================================
+Melakukan transaksi dengan endpoint 'http://localhost:8080/transaction/make' dengan methode POST dengan
+format berikut :
+
+{
+    "email":"angga@mail.com",
+    "merchant":"BeautyQ",
+    "paid":100000
+}
+
+Lalu jika berhasil akan mendapatkan respond :
+
+{
+    "Message": "Successfully added data transaction"
+}
+
+Sebelum ke fitur history, mari kita coba membuat transaksi dengan customer yang sama tetapi dengan merchant dan paid yang berbeda 2 kali lagi
+
+inputan ke pertama
+{
+    "email":"angga@mail.com",
+    "merchant":"ACT",
+    "paid":300000
+}
+
+inputan kedua
+{
+    "email":"angga@mail.com",
+    "merchant":"JatiPermata",
+    "paid":500000
+}
+
+== Melihat History transaksi dengan endpoint 'http://localhost:8080/transaction/history/angga@mail.com'
+dengan methode GET maka akan mendapat respond :
+
+{
+    "history": [
+        {
+            "id": 0,
+            "customer_id": {
+                "id": 8,
+                "name": "Angga",
+                "email": "angga@mail.com",
+                "password": "angga1234",
+                "balance": 100000,
+                "created_at": "0001-01-01T00:00:00Z",
+                "updated_at": "0001-01-01T00:00:00Z",
+                "is_deleted": false
+            },
+            "merchant_id": {
+                "id": 3,
+                "name": "BeautyQ",
+                "no_telephon": "01114",
+                "category": "Make-up",
+                "balance": 200000,
+                "craeted_at": "0001-01-01T00:00:00Z",
+                "updeted_at": "0001-01-01T00:00:00Z",
+                "status": true
+            },
+            "created_at": "2023-06-30T21:57:09.692755Z",
+            "amount": 100000
+        },
+        {
+            "id": 0,
+            "customer_id": {
+                "id": 8,
+                "name": "Angga",
+                "email": "angga@mail.com",
+                "password": "angga1234",
+                "balance": 100000,
+                "created_at": "0001-01-01T00:00:00Z",
+                "updated_at": "0001-01-01T00:00:00Z",
+                "is_deleted": false
+            },
+            "merchant_id": {
+                "id": 1,
+                "name": "ACT",
+                "no_telephon": "01112",
+                "category": "fashion",
+                "balance": 300000,
+                "craeted_at": "0001-01-01T00:00:00Z",
+                "updeted_at": "0001-01-01T00:00:00Z",
+                "status": true
+            },
+            "created_at": "2023-06-30T22:02:38.359Z",
+            "amount": 300000
+        },
+        {
+            "id": 0,
+            "customer_id": {
+                "id": 8,
+                "name": "Angga",
+                "email": "angga@mail.com",
+                "password": "angga1234",
+                "balance": 100000,
+                "created_at": "0001-01-01T00:00:00Z",
+                "updated_at": "0001-01-01T00:00:00Z",
+                "is_deleted": false
+            },
+            "merchant_id": {
+                "id": 2,
+                "name": "JatiPermata",
+                "no_telephon": "01113",
+                "category": "furniture",
+                "balance": 500000,
+                "craeted_at": "0001-01-01T00:00:00Z",
+                "updeted_at": "0001-01-01T00:00:00Z",
+                "status": true
+            },
+            "created_at": "2023-06-30T22:02:56.122699Z",
+            "amount": 500000
+        }
+    ]
+}
+
+Akan muncul history dari transaksi customer angga
+
+## 4 ##
+==================================>> Melakukan Logout <<=============================================
+Kita logout dengan endpoint 'http://localhost:8080/customers/logout' dengan methode POST
+Lalu jika berhasil logout akan mendapat respond :
+
+{
+    "message": "Logout successful"
+}
+
+Setelah logout maka kita tidak akan bisa akses fitur-fitur yang ada, kita harus melakukan login kembali
+
+*Terima kasih
