@@ -11,6 +11,7 @@ import (
 
 type TransactionRepository interface {
 	Create(transaction models.Transaction) error
+	History(email string) ([]models.TransactionHistory, error)
 }
 
 type transactionRepository struct {
@@ -66,7 +67,6 @@ func (t transactionRepository) Create(transaction models.Transaction) error {
 		return err
 	}
 
-	// var trxHistory models.TransactionHistory
 	//Kurangi saldo customer
 	updateQuery := `UPDATE customer SET balance = balance - $1 WHERE email = $2`
 	_, err = trx.Exec(updateQuery, transaction.Paid, transaction.CustomerEmail)
@@ -89,8 +89,8 @@ func (t transactionRepository) Create(transaction models.Transaction) error {
 
 	//Simpan data di tabel transaksi
 	timeNow := time.Now()
-	insertQuery := `INSERT INTO history_trx (customer_email, merchant_name, created_at) VALUES ($1, $2, $3)`
-	_, err = trx.Exec(insertQuery, transaction.CustomerEmail, transaction.MerchantName, timeNow)
+	insertQuery := `INSERT INTO history_trx (customer_email, merchant_name, created_at, amount) VALUES ($1, $2, $3, $4)`
+	_, err = trx.Exec(insertQuery, transaction.CustomerEmail, transaction.MerchantName, timeNow, transaction.Paid)
 	if err != nil {
 		trx.Rollback()
 		log.Println("error : ", err)
@@ -106,4 +106,63 @@ func (t transactionRepository) Create(transaction models.Transaction) error {
 
 	return err
 
+}
+
+func(t transactionRepository) History(email string) ([]models.TransactionHistory, error) {
+	query := `SELECT 
+	c.id, 
+	c.name, 
+	c.email, 
+	c.password, 
+	c.balance, 
+	m.id, 
+	m.name, 
+	m.no_telephon, 
+	m.category, 
+	m.balance, 
+	t.created_at, 
+	t.amount 
+	FROM history_trx t JOIN  customer c 
+	ON t.customer_email=c.email JOIN merchant m 
+	ON t.merchant_name = m.name
+	WHERE t.customer_email = $1;`
+
+	
+	rows, err := t.db.Query(query, email)
+	if err != nil {
+		log.Println("Failed to get history, err : ",err)
+	}
+	defer rows.Close()
+
+	histories := []models.TransactionHistory{}
+	for rows.Next() {
+		var transaction models.TransactionHistory
+		err := rows.Scan(
+			&transaction.CustomerId.ID,
+			&transaction.CustomerId.Name,
+			&transaction.CustomerId.Email,
+			&transaction.CustomerId.Password,
+			&transaction.CustomerId.Balance,
+			&transaction.MerchantId.ID,
+			&transaction.MerchantId.Name,
+			&transaction.MerchantId.NoTelephon,
+			&transaction.MerchantId.Category,
+			&transaction.MerchantId.Balance,
+			&transaction.CreatedAt,
+			&transaction.Amount,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan transfer row: %v", err)
+		}
+
+		if err != nil {
+			log.Println(err)
+		}
+		histories = append(histories, transaction)
+
+		
+		
+	}
+
+	return histories, err
 }

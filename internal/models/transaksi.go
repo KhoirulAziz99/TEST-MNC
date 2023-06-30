@@ -5,7 +5,7 @@ import "time"
 type Transaction struct {
 	CustomerEmail string `json:"email"`
 	MerchantName  string `json:"merchant"`
-	Paid          int64    `json:"paid"`
+	Paid          int64  `json:"paid"`
 }
 
 type TransactionHistory struct {
@@ -13,5 +13,5 @@ type TransactionHistory struct {
 	CustomerId Customer  `json:"customer_id"`
 	MerchantId Merchant  `json:"merchant_id"`
 	CreatedAt  time.Time `json:"created_at"`
+	Amount     int64     `json:"amount"`
 }
-
